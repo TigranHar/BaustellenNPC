@@ -1,0 +1,7 @@
+name: Ncps
+version: '1.0-SNAPSHOT'
+main: me.npc.ncps.Ncps
+commands:
+  baustellennpc:
+    usage: /<command>
+    description: create an npc

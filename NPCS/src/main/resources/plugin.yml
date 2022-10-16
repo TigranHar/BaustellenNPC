@@ -1,0 +1,7 @@
+name: Ncps
+version: '${project.version}'
+main: me.npc.ncps.Ncps
+commands:
+  baustellennpc:
+    usage: /<command>
+    description: create an npc
