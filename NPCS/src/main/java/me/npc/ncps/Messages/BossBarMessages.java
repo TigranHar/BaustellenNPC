@@ -2,6 +2,8 @@ package me.npc.ncps.Messages;
 
 import me.npc.ncps.NPCS.NPCManager;
 import me.npc.ncps.Ncps;
+import net.md_5.bungee.api.ChatMessageType;
+import net.md_5.bungee.api.chat.TextComponent;
 import net.minecraft.server.v1_12_R1.EntityPlayer;
 import net.minecraft.server.v1_12_R1.PacketPlayOutEntityHeadRotation;
 import net.minecraft.server.v1_12_R1.PlayerConnection;
@@ -21,27 +23,10 @@ public class BossBarMessages implements Listener {
     static int messageNum = 0;
     static int headRotation = -90;
     public static BossBar bossBarM = null;
-    static int headRotationTime = 100;
+    public static String npcName = "";
+    static int headRotationTime = 30;
 
     public static Ncps constnpcs = Ncps.getInstance();
-
-    @EventHandler
-    public void onPlayerJoin(PlayerJoinEvent e) {
-        Player p = e.getPlayer();
-
-        if (bossBarM != null) bossBarM.addPlayer(p);
-    }
-
-    public static BossBar createBossBar(String message) {
-        BossBar bossBar = Bukkit.createBossBar(
-            message,
-            BarColor.GREEN,
-            BarStyle.SOLID);
-
-        bossBarM = bossBar;
-        createMessage(bossBar,message);
-        return bossBar;
-    }
 
     public static void createMessage(BossBar bossBar, String message) {
         for (Player p : Bukkit.getOnlinePlayers()) {
@@ -62,8 +47,6 @@ public class BossBarMessages implements Listener {
 
     public static int startBossBar(String[] messages) {
         int taskID;
-        bossBarM = createBossBar(messages[0]);
-        bossBarM.setProgress(0);
 
         if (Ncps.getData().get("headRotationTime") != null) {
             headRotationTime = Ncps.getData().getInt("headRotationTime");
@@ -73,8 +56,13 @@ public class BossBarMessages implements Listener {
             @Override
             public void run() {
                 tick++;
-                ++bossBarCounter;
-                bossBarM.setProgress(bossBarCounter / 100);
+                npcName = NPCManager.NPC.get(0).displayName;
+
+                for (Player player : Bukkit.getOnlinePlayers()) {
+                    player.spigot().sendMessage(
+                            ChatMessageType.ACTION_BAR,
+                            new TextComponent(npcName + " ➣ " + messages[messageNum]));
+                }
 
                 if (tick % headRotationTime == 0) {
                     messageNum = 0;
@@ -88,7 +76,6 @@ public class BossBarMessages implements Listener {
                                 for (EntityPlayer npc : NPCManager.NPC) {
                                     PlayerConnection connection = ((CraftPlayer) player).getHandle().playerConnection;
                                     connection.sendPacket(new PacketPlayOutEntityHeadRotation(npc, (byte) ((npc.yaw + headRotation) * 256 / 360)));
-                                    bossBarCounter = 0;
                                 }
                             }
                         }
@@ -96,7 +83,6 @@ public class BossBarMessages implements Listener {
 
                     else {
                         ++messageNum;
-                        createMessage(bossBarM, messages[messageNum]);
 
                         if(headRotation != -90) headRotation = -90;
                         else headRotation = 90;
@@ -106,7 +92,6 @@ public class BossBarMessages implements Listener {
                                 for (EntityPlayer npc : NPCManager.NPC) {
                                     PlayerConnection connection = ((CraftPlayer) player).getHandle().playerConnection;
                                     connection.sendPacket(new PacketPlayOutEntityHeadRotation(npc, (byte) ((npc.yaw + headRotation) * 256 / 360)));
-                                    bossBarCounter = 0;
                                 }
                             }
                         }

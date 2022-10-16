@@ -1,4 +1,4 @@
-name: Ncps
+name: BaustellenNPC
 version: '1.0-SNAPSHOT'
 main: me.npc.ncps.Ncps
 commands:

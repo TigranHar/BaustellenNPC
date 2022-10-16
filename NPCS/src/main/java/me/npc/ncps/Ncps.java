@@ -99,11 +99,9 @@ public final class Ncps extends JavaPlugin {
 
                 if (messages.length < 4) {
                     messages = NPCManager.push(messages, message);
-                    System.out.print(message + " : " + shouldStart + " : " + messages.length);
                 }
 
                 if (messages.length >= 4 && !shouldStart) {
-                    /*NPCManager.bossBarTaskID =*/
                     BossBarMessages.startBossBar(messages);
                     shouldStart = true;
                 }
