@@ -97,11 +97,11 @@ public final class Ncps extends JavaPlugin {
 
                 NPCManager.NPC.add(npcAdd);
 
-                if (messages.length < 4) {
+                if (messages.length < 2) {
                     messages = NPCManager.push(messages, message);
                 }
 
-                if (messages.length >= 4 && !shouldStart) {
+                if (messages.length >= 2 && !shouldStart) {
                     BossBarMessages.startBossBar(messages);
                     shouldStart = true;
                 }
