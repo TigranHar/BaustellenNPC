@@ -104,10 +104,12 @@ public class NPCManager {
 
         NPC.add(npc);
 
-        if (messages.length < 4) {
-            messages = push(messages, message);
-        } else {
-            bossBarTaskID = BossBarMessages.startBossBar(messages);
+        if (messages.length < 2) {
+            messages = NPCManager.push(messages, message);
+        }
+
+        if (messages.length >= 2 && !shouldStart) {
+            BossBarMessages.startBossBar(messages);
             shouldStart = true;
         }
     }
